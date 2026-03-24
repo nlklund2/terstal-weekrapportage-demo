@@ -8,6 +8,137 @@
 :root{--nv:#1A1F36;--dk:#0F1322;--gd:#C8A951;--pu:#6B4C9A;--wh:#FFF;--of:#F4F4F6;--lg:#E8E8EC;--gr:#2E8B57;--rd:#C0392B;--mg:#888}
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;background:var(--of);color:var(--nv);line-height:1.5}
+.demo-bar{background:#E74C3C;color:#fff;text-align:center;padding:.55rem 1rem;font-size:.95rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;position:sticky;top:0;z-index:200}
+.hdr{background:linear-gradient(135deg,var(--dk),var(--nv));color:var(--wh);padding:1.2rem 2rem;display:flex;justify-content:space-between;align-items:center;position:sticky;top:36px;z-index:100}
+.hdr-l{display:flex;align-items:center;gap:1.5rem}
+.logo{font-size:1.6rem;font-weight:700;color:var(--gd);letter-spacing:1px}
+.ttl{font-size:1rem;font-weight:300;color:var(--of);opacity:.8}
+.hdr-r{display:flex;align-items:center;gap:1rem}
+select,.btn{padding:.5rem 1rem;border:1px solid var(--lg);border-radius:4px;background:var(--wh);color:var(--nv);font-size:.9rem;cursor:pointer}
+.btn{background:var(--gd);border:none;font-weight:600}
+.tabs{display:flex;background:var(--wh);border-bottom:2px solid var(--lg);padding:0 2rem}
+.tab{padding:.8rem 1.5rem;cursor:pointer;font-weight:500;color:var(--mg);border-bottom:3px solid transparent;transition:all .2s}
+.tab:hover{color:var(--nv)}
+.tab.act{color:var(--gd);border-bottom-color:var(--gd)}
+.main{padding:1.5rem 2rem;max-width:1400px;margin:0 auto}
+.pg{display:none}.pg.act{display:block}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:1rem;margin-bottom:1.5rem}
+.kpi{background:var(--wh);border-radius:8px;padding:1.2rem;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.kpi-l{font-size:.78rem;color:var(--mg);text-transform:uppercase;letter-spacing:.5px;margin-bottom:.2rem}
+.kpi-v{font-size:1.7rem;font-weight:700;color:var(--nv)}
+.kpi-d{font-size:.82rem;font-weight:600;margin-top:.2rem}
+.kpi-d.p{color:var(--gr)}.kpi-d.n{color:var(--rd)}
+.kpi canvas{width:100%;height:28px;margin-top:.3rem}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem}
+.cd{background:var(--wh);border-radius:8px;padding:1.2rem;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.cd h3{font-size:1rem;color:var(--nv);margin-bottom:1rem;padding-bottom:.5rem;border-bottom:2px solid var(--lg)}
+canvas.ch{width:100%;height:300px}
+table{width:100%;border-collapse:collapse;font-size:.85rem}
+th{background:var(--nv);color:var(--wh);padding:.5rem .7rem;text-align:left;font-weight:500}
+td{padding:.45rem .7rem;border-bottom:1px solid var(--lg)}
+tr:hover td{background:rgba(200,169,81,.04)}
+.pc{color:var(--gr);font-weight:600}.nc{color:var(--rd);font-weight:600}
+.ss{margin-bottom:1rem}
+.ss select{padding:.6rem 1rem;font-size:1rem;min-width:280px}
+.ft{text-align:center;padding:1.2rem;color:var(--mg);font-size:.78rem;border-top:1px solid var(--lg);margin-top:2rem}
+@media(max-width:900px){.g2{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+<div class="demo-bar">â  DEMO â Dit dashboard bevat fictieve gegevens, geen werkelijke cijfers â </div>
+<div class="hdr"><div class="hdr-l"><span class="logo">ter Stal</span><span class="ttl">Weekrapportage â Commerci&#235;le Resultaten</span></div><div class="hdr-r"><select id="wSel"></select><button class="btn" onclick="window.print()">Print</button></div></div>
+<div class="tabs" id="tabs"><div class="tab act" data-t="exec">Executive Summary</div><div class="tab" data-t="rayon">Rayon Overzicht</div><div class="tab" data-t="winkel">Winkel Detail</div><div class="tab" data-t="prod">Productgroep Analyse</div></div>
+<div class="main">
+<div class="pg act" id="pg-exec"><div class="kpis" id="ek"></div><div class="g2"><div class="cd"><h3>Omzet per Week</h3><canvas id="c1" class="ch"></canvas></div><div class="cd"><h3>Top 5 &amp; Bottom 5 Winkels</h3><div id="et"></div></div></div></div>
+<div class="pg" id="pg-rayon"><div class="kpis" id="rk"></div><div class="g2"><div class="cd"><h3>Omzet per Rayon</h3><canvas id="c2" class="ch"></canvas></div><div class="cd"><h3>Rayon Details</h3><div id="rt"></div></div></div></div>
+<div class="pg" id="pg-winkel"><div class="ss">Selecteer winkel: <select id="sSel"></select></div><div class="kpis" id="wk"></div><div class="cd"><h3>Omzet Trend (12 weken)</h3><canvas id="c3" class="ch"></canvas></div></div>
+<div class="pg" id="pg-prod"><div class="g2"><div class="cd"><h3>Omzet per Productgroep</h3><canvas id="c4" class="ch"></canvas></div><div class="cd"><h3>Omzetaandeel</h3><canvas id="c5" class="ch"></canvas></div></div><div class="cd" style="margin-top:1.5rem"><h3>Productgroep Details</h3><div id="pt"></div></div></div>
+</div>
+<div class="ft">ter Stal | BI &amp; Data Analyse | Demo Dashboard | Maart 2026</div>
+<script>
+(function(){
+"use strict";
+try{
+var NV='#1A1F36',GD='#C8A951',PU='#6B4C9A',GR='#2E8B57',RD='#C0392B';
+var CL=[GD,PU,GR,'#3498DB',RD,'#E67E22','#1ABC9C','#8E44AD'];
+function fm(n){if(n==null)return'-';var s=Math.round(n).toString(),r='';for(var i=s.length-1,c=0;i>=0;i--,c++){if(c>0&&c%3===0)r='.'+r;r=s[i]+r;}return r;}
+function eu(n){return'\u20AC '+fm(n);}
+function pc(n){return n.toFixed(1).replace('.',',')+' %';}
+function pd(n){return(n>=0?'+':'')+n.toFixed(1).replace('.',',')+' %';}
+var sd=42;function rn(){sd=(sd*16807)%2147483647;return(sd&0x7fffffff)/2147483647;}
+function rb(a,b){return a+rn()*(b-a);}function ri(a,b){return Math.floor(rb(a,b+1));}
+var RY=['Noord','Oost','Zuid','West','Midden'];
+var PG=['Damesmode','Herenmode','Kindermode','Schoenen','Accessoires','Sport','Lingerie','Home'];
+var PW=[.22,.18,.14,.13,.10,.09,.08,.06];
+var SN=['Groningen','Leeuwarden','Assen','Emmen','Drachten','Hoogeveen','Heerenveen','Sneek','Meppel','Stadskanaal','Enschede','Deventer','Zwolle','Apeldoorn','Arnhem','Nijmegen','Doetinchem','Hengelo','Almelo','Harderwijk','Eindhoven','Tilburg','Breda','Roosendaal','Helmond','Den Bosch','Venlo','Roermond','Maastricht','Sittard','Rotterdam','Den Haag','Leiden','Dordrecht','Delft','Zoetermeer','Gouda','Schiedam','Vlaardingen','Alphen a/d Rijn','Amsterdam','Utrecht','Amersfoort','Hilversum','Almere','Lelystad','Hoofddorp','Haarlem','Zaandam','Purmerend'];
+var ST=[];for(var i=0;i<50;i++)ST.push({nm:SN[i],ry:RY[Math.floor(i/10)],br:rb(40000,120000),bt:ri(800,2500),bc:rb(18,38)});
+var WD={};
+for(var w=1;w<=12;w++){WD[w]=[];var sf=1+.03*Math.sin(w/12*Math.PI*2);for(var s=0;s<50;s++){var st=ST[s],rv=st.br*sf*rb(.85,1.15),tx=Math.round(st.bt*sf*rb(.88,1.12)),ab=rv/tx,cv=st.bc*rb(.92,1.08),bp=rb(-8,12),vj=rb(-5,15),ps=[],pt2=0;for(var p=0;p<8;p++){var pr=rv*PW[p]*rb(.8,1.2);ps.push(pr);pt2+=pr;}for(var p2=0;p2<8;p2++)ps[p2]=ps[p2]/pt2*rv;WD[w].push({sn:st.nm,ry:st.ry,om:rv,tx:tx,ab:ab,cv:cv,vb:bp,vv:vj,pr:ps});}}
+function sC(id,h2){var c=document.getElementById(id);if(!c)return null;var dp=window.devicePixelRatio||1,rc=c.parentElement.getBoundingClientRect(),cw=Math.max(200,Math.floor(rc.width-30)),ch=h2||300;c.width=cw*dp;c.height=ch*dp;c.style.width=cw+'px';c.style.height=ch+'px';var x=c.getContext('2d');x.scale(dp,dp);x.W=cw;x.H=ch;return x;}
+function dBar(id,lb,vl,cl,o){o=o||{};var x=sC(id,o.h||280);if(!x)return;var W=x.W,H=x.H,pa={t:20,r:20,b:50,l:70},cW=W-pa.l-pa.r,cH=H-pa.t-pa.b,mx=Math.max.apply(null,vl)*1.1;if(mx===0)mx=1;var bW=Math.max(10,Math.floor(cW/lb.length*.6)),gp=(cW-bW*lb.length)/(lb.length+1);x.strokeStyle='#DDD';x.lineWidth=1;x.beginPath();x.moveTo(pa.l,pa.t);x.lineTo(pa.l,H-pa.b);x.lineTo(W-pa.r,H-pa.b);x.stroke();for(var g=0;g<=4;g++){var y=pa.t+cH*(1-g/4),v=mx*g/4;x.strokeStyle='#EEE';x.beginPath();x.moveTo(pa.l,y);x.lineTo(W-pa.r,y);x.stroke();x.fillStyle='#888';x.font='11px sans-serif';x.textAlign='right';x.fillText(o.fy?o.fy(v):fm(v),pa.l-8,y+4);}for(var i=0;i<lb.length;i++){var xp=pa.l+gp+(bW+gp)*i,bH=vl[i]/mx*cH,yp=H-pa.b-bH;x.fillStyle=typeof cl==='object'?cl[i%cl.length]:cl;x.fillRect(xp,yp,bW,bH);x.fillStyle=NV;x.font='bold 11px sans-serif';x.textAlign='center';x.fillText(o.fv?o.fv(vl[i]):fm(vl[i]),xp+bW/2,yp-5);x.fillStyle='#666';x.font='11px sans-serif';x.save();x.translate(xp+bW/2,H-pa.b+8);if(lb.length>8)x.rotate(-.5);x.textAlign=lb.length>8?'right':'center';x.fillText(lb[i],0,10);x.restore();}}
+function dLine(id,lb,vl,cl,o){o=o||{};var x=sC(id,o.h||280);if(!x)return;var W=x.W,H=x.H,pa={t:20,r:20,b:50,l:70},cW=W-pa.l-pa.r,cH=H-pa.t-pa.b,mx=Math.max.apply(null,vl)*1.1,mn=Math.min.apply(null,vl)*.9;if(mx===mn){mx+=1;mn-=1;}var rg=mx-mn;x.strokeStyle='#DDD';x.lineWidth=1;x.beginPath();x.moveTo(pa.l,pa.t);x.lineTo(pa.l,H-pa.b);x.lineTo(W-pa.r,H-pa.b);x.stroke();for(var g=0;g<=4;g++){var y=pa.t+cH*(1-g/4),v=mn+rg*g/4;x.strokeStyle='#EEE';x.beginPath();x.moveTo(pa.l,y);x.lineTo(W-pa.r,y);x.stroke();x.fillStyle='#888';x.font='11px sans-serif';x.textAlign='right';x.fillText(o.fy?o.fy(v):fm(v),pa.l-8,y+4);}x.strokeStyle=cl||GD;x.lineWidth=2.5;x.beginPath();var pts=[];for(var i=0;i<vl.length;i++){var xp=pa.l+i*cW/(vl.length-1||1),yp=pa.t+cH*(1-(vl[i]-mn)/rg);pts.push({x:xp,y:yp});if(i===0)x.moveTo(xp,yp);else x.lineTo(xp,yp);}x.stroke();for(var i2=0;i2<pts.length;i2++){x.fillStyle=cl||GD;x.beginPath();x.arc(pts[i2].x,pts[i2].y,4,0,Math.PI*2);x.fill();x.fillStyle=NV;x.font='bold 10px sans-serif';x.textAlign='center';x.fillText(o.fv?o.fv(vl[i2]):fm(vl[i2]),pts[i2].x,pts[i2].y-10);x.fillStyle='#666';x.font='11px sans-serif';x.fillText(lb[i2],pts[i2].x,H-pa.b+18);}}
+function dHBar(id,lb,vl,cs,o){o=o||{};var x=sC(id,o.h||320);if(!x)return;var W=x.W,H=x.H,pa={t:10,r:80,b:20,l:110},cW=W-pa.l-pa.r,cH=H-pa.t-pa.b,mx=Math.max.apply(null,vl)*1.15;if(mx===0)mx=1;var bH=Math.max(12,Math.floor(cH/lb.length*.65)),gp=(cH-bH*lb.length)/(lb.length+1);for(var i=0;i<lb.length;i++){var yp=pa.t+gp+(bH+gp)*i,bW=vl[i]/mx*cW;x.fillStyle=cs?cs[i%cs.length]:GD;x.fillRect(pa.l,yp,bW,bH);x.fillStyle=NV;x.font='12px sans-serif';x.textAlign='right';x.fillText(lb[i],pa.l-8,yp+bH/2+4);x.font='bold 12px sans-serif';x.textAlign='left';x.fillText(o.fv?o.fv(vl[i]):eu(vl[i]),pa.l+bW+8,yp+bH/2+4);}}
+function dDon(id,lb,vl,cs,o){o=o||{};var x=sC(id,o.h||320);if(!x)return;var W=x.W,H=x.H,cx=W*.35,cy=H/2,r=Math.max(10,Math.min(cx-20,cy-30)),tt=0;for(var i=0;i<vl.length;i++)tt+=vl[i];if(tt===0)return;var sa=-Math.PI/2;for(var i2=0;i2<vl.length;i2++){var sl=vl[i2]/tt*Math.PI*2;x.fillStyle=cs[i2%cs.length];x.beginPath();x.moveTo(cx,cy);x.arc(cx,cy,r,sa,sa+sl);x.closePath();x.fill();sa+=sl;}x.fillStyle='#FFF';x.beginPath();x.arc(cx,cy,Math.max(1,r*.55),0,Math.PI*2);x.fill();x.fillStyle=NV;x.font='bold 14px sans-serif';x.textAlign='center';x.fillText(eu(tt),cx,cy+5);var lx=W*.65,ly=20;for(var i3=0;i3<lb.length;i3++){x.fillStyle=cs[i3%cs.length];x.fillRect(lx,ly+i3*24,14,14);x.fillStyle=NV;x.font='12px sans-serif';x.textAlign='left';x.fillText(lb[i3]+' ('+(vl[i3]/tt*100).toFixed(1).replace('.',',')+' %)',lx+20,ly+i3*24+12);}}
+function dSp(cv,vl,cl){if(!cv||!vl||vl.length<2)return;var dp=window.devicePixelRatio||1,w=cv.offsetWidth||120,h=cv.offsetHeight||28;cv.width=w*dp;cv.height=h*dp;cv.style.width=w+'px';cv.style.height=h+'px';var x=cv.getContext('2d');x.scale(dp,dp);var mn=Math.min.apply(null,vl),mx=Math.max.apply(null,vl);if(mn===mx){mn-=1;mx+=1;}var rg=mx-mn;x.strokeStyle=cl||GD;x.lineWidth=1.5;x.beginPath();for(var i=0;i<vl.length;i++){var xp=i/(vl.length-1)*w,yp=h-((vl[i]-mn)/rg)*h*.8-h*.1;if(i===0)x.moveTo(xp,yp);else x.lineTo(xp,yp);}x.stroke();}
+function gW(w){return WD[w]||WD[12];}
+function aT(d){var o={om:0,tx:0,cv:0,vb:0,vv:0,n:d.length};for(var i=0;i<d.length;i++){o.om+=d[i].om;o.tx+=d[i].tx;o.cv+=d[i].cv;o.vb+=d[i].vb;o.vv+=d[i].vv;}o.ab=o.tx>0?o.om/o.tx:0;o.cv/=o.n;o.vb/=o.n;o.vv/=o.n;return o;}
+function aR(d){var m={};for(var i=0;i<d.length;i++){var r=d[i].ry;if(!m[r])m[r]={om:0,tx:0,cv:0,vb:0,vv:0,n:0};m[r].om+=d[i].om;m[r].tx+=d[i].tx;m[r].cv+=d[i].cv;m[r].vb+=d[i].vb;m[r].vv+=d[i].vv;m[r].n++;}for(var k in m){m[k].ab=m[k].tx>0?m[k].om/m[k].tx:0;m[k].cv/=m[k].n;m[k].vb/=m[k].n;m[k].vv/=m[k].n;}return m;}
+function aP(d){var t=[];for(var pp=0;pp<8;pp++)t.push(0);for(var i=0;i<d.length;i++)for(var pp2=0;pp2<8;pp2++)t[pp2]+=d[i].pr[pp2];return t;}
+var cW=12;
+function mK(l,v,d){var e=document.createElement('div');e.className='kpi';var ip=d>=0;e.innerHTML='<div class="kpi-l">'+l+'</div><div class="kpi-v">'+v+'</div><div class="kpi-d '+(ip?'p':'n')+'">'+pd(d)+'</div><canvas class="sp" width="120" height="28"></canvas>';return e;}
+function rE(){var d=gW(cW),t=aT(d),c=document.getElementById('ek');c.innerHTML='';var wo=[],wt=[],wb2=[],wc=[],wbu=[],wvj=[];for(var w=1;w<=12;w++){var t2=aT(gW(w));wo.push(t2.om);wt.push(t2.tx);wb2.push(t2.ab);wc.push(t2.cv);wbu.push(t2.vb);wvj.push(t2.vv);}
+var ks=[{l:'Omzet',v:eu(t.om),d:t.vv,s:wo},{l:'Transacties',v:fm(t.tx),d:t.vv,s:wt},{l:'Gem. Bon',v:eu(t.ab),d:t.vv*.3,s:wb2},{l:'Conversie',v:pc(t.cv),d:t.cv-25,s:wc},{l:'vs Budget',v:pd(t.vb),d:t.vb,s:wbu},{l:'vs Vorig Jaar',v:pd(t.vv),d:t.vv,s:wvj}];
+for(var i=0;i<ks.length;i++){var cd2=mK(ks[i].l,ks[i].v,ks[i].d);c.appendChild(cd2);dSp(cd2.querySelector('.sp'),ks[i].s,ks[i].d>=0?GR:RD);}
+var wl=[],wv=[];for(var w2=1;w2<=12;w2++){wl.push('Wk '+w2);wv.push(wo[w2-1]);}
+var fk=function(v2){return eu(Math.round(v2/1000))+'K';};
+dBar('c1',wl,wv,GD,{fv:fk});
+var so=d.slice().sort(function(a,b){return b.om-a.om;}),t5=so.slice(0,5),b5=so.slice(-5).reverse();
+var h='<table><tr><th>#</th><th>Winkel</th><th>Rayon</th><th>Omzet</th><th>vs Budget</th></tr>';
+h+='<tr><td colspan="5" style="background:'+GR+';color:#fff;font-weight:600;text-align:center">Top 5</td></tr>';
+for(var i2=0;i2<5;i2++){var s2=t5[i2];h+='<tr><td>'+(i2+1)+'</td><td>'+s2.sn+'</td><td>'+s2.ry+'</td><td>'+eu(s2.om)+'</td><td class="'+(s2.vb>=0?'pc':'nc')+'">'+pd(s2.vb)+'</td></tr>';}
+h+='<tr><td colspan="5" style="background:'+RD+';color:#fff;font-weight:600;text-align:center">Bottom 5</td></tr>';
+for(var i3=0;i3<5;i3++){var s3=b5[i3];h+='<tr><td>'+(50-i3)+'</td><td>'+s3.sn+'</td><td>'+s3.ry+'</td><td>'+eu(s3.om)+'</td><td class="'+(s3.vb>=0?'pc':'nc')+'">'+pd(s3.vb)+'</td></tr>';}
+h+='</table>';document.getElementById('et').innerHTML=h;}
+function rR(){var d=gW(cW),br=aR(d),t=aT(d),c=document.getElementById('rk');c.innerHTML='';
+var ks=[{l:'Totale Omzet',v:eu(t.om),d:t.vv},{l:'Gem. Conversie',v:pc(t.cv),d:t.cv-25},{l:'vs Budget',v:pd(t.vb),d:t.vb}];
+for(var i=0;i<ks.length;i++){var cd2=mK(ks[i].l,ks[i].v,ks[i].d);c.appendChild(cd2);}
+var rl=[],rv=[];for(var j=0;j<RY.length;j++){rl.push(RY[j]);rv.push(br[RY[j]]?br[RY[j]].om:0);}
+dBar('c2',rl,rv,CL,{fv:function(v){return eu(Math.round(v/1000))+'K';}});
+var h='<table><tr><th>Rayon</th><th>Omzet</th><th>Transacties</th><th>Gem. Bon</th><th>Conversie</th><th>vs Budget</th><th>vs VJ</th></tr>';
+for(var j2=0;j2<RY.length;j2++){var r=br[RY[j2]];if(!r)continue;h+='<tr><td style="font-weight:600">'+RY[j2]+'</td><td>'+eu(r.om)+'</td><td>'+fm(r.tx)+'</td><td>'+eu(r.ab)+'</td><td>'+pc(r.cv)+'</td><td class="'+(r.vb>=0?'pc':'nc')+'">'+pd(r.vb)+'</td><td class="'+(r.vv>=0?'pc':'nc')+'">'+pd(r.vv)+'</td></tr>';}
+h+='</table>';document.getElementById('rt').innerHTML=h;}
+function rW(){var sel=document.getElementById('sSel'),sn=sel.value||ST[0].nm,c=document.getElementById('wk');c.innerHTML='';var d=gW(cW),sd2=null;for(var i=0;i<d.length;i++)if(d[i].sn===sn){sd2=d[i];break;}if(!sd2)return;
+var ks=[{l:'Omzet',v:eu(sd2.om),d:sd2.vv},{l:'Transacties',v:fm(sd2.tx),d:sd2.vv},{l:'Gem. Bon',v:eu(sd2.ab),d:sd2.vv*.3},{l:'Conversie',v:pc(sd2.cv),d:sd2.cv-25},{l:'vs Budget',v:pd(sd2.vb),d:sd2.vb},{l:'vs Vorig Jaar',v:pd(sd2.vv),d:sd2.vv}];
+for(var i2=0;i2<ks.length;i2++){var cd2=mK(ks[i2].l,ks[i2].v,ks[i2].d);c.appendChild(cd2);}
+var wl=[],wv=[];for(var w=1;w<=12;w++){wl.push('Wk '+w);var wd=gW(w);for(var j=0;j<wd.length;j++)if(wd[j].sn===sn){wv.push(wd[j].om);break;}}
+var fk=function(v){return eu(Math.round(v/1000))+'K';};
+dLine('c3',wl,wv,GD,{h:280,fv:fk,fy:fk});}
+function rP(){var d=gW(cW),pt2=aP(d);dHBar('c4',PG,pt2,CL,{h:320,fv:function(v){return eu(Math.round(v/1000))+'K';}});dDon('c5',PG,pt2,CL,{h:320});
+var gt=0;for(var pp=0;pp<8;pp++)gt+=pt2[pp];var av=gt/8;
+var h='<table><tr><th>Productgroep</th><th>Omzet</th><th>Aandeel</th><th>Index</th></tr>';
+for(var pp2=0;pp2<8;pp2++){var sh=(pt2[pp2]/gt*100),ix=(pt2[pp2]/av*100);h+='<tr><td style="font-weight:600"><span style="display:inline-block;width:12px;height:12px;background:'+CL[pp2]+';border-radius:2px;margin-right:6px"></span>'+PG[pp2]+'</td><td>'+eu(pt2[pp2])+'</td><td>'+sh.toFixed(1).replace('.',',')+' %</td><td class="'+(ix>=100?'pc':'nc')+'">'+ix.toFixed(0)+'</td></tr>';}
+h+='</table>';document.getElementById('pt').innerHTML=h;}
+function init(){var ws=document.getElementById('wSel');for(var w=12;w>=1;w--){var o=document.createElement('option');o.value=w;o.textContent='Week '+w+' - 2026';ws.appendChild(o);}ws.value=12;ws.addEventListener('change',function(){cW=parseInt(this.value);rAll();});
+var ss=document.getElementById('sSel');for(var i=0;i<50;i++){var o2=document.createElement('option');o2.value=ST[i].nm;o2.textContent=ST[i].nm+' ('+ST[i].ry+')';ss.appendChild(o2);}ss.addEventListener('change',function(){rW();});
+var te=document.querySelectorAll('.tab');for(var i2=0;i2<te.length;i2++)te[i2].addEventListener('click',function(){for(var j=0;j<te.length;j++)te[j].classList.remove('act');this.classList.add('act');var pgs=document.querySelectorAll('.pg');for(var j2=0;j2<pgs.length;j2++)pgs[j2].classList.remove('act');document.getElementById('pg-'+this.getAttribute('data-t')).classList.add('act');rAll();});
+rAll();}
+function rAll(){setTimeout(function(){try{rE();rR();rW();rP();}catch(e2){document.body.innerHTML='<div style="padding:2rem;color:red"><h2>Render Error</h2><pre>'+e2.message+'</pre></div>';}},50);}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+}catch(e){document.body.innerHTML='<div style="padding:2rem;color:red;font-size:1.2rem"><h2>Error</h2><pre>'+e.message+'</pre></div>';}
+})();
+</script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>terStal Weekrapportage</title>
+<style>
+:root{--nv:#1A1F36;--dk:#0F1322;--gd:#C8A951;--pu:#6B4C9A;--wh:#FFF;--of:#F4F4F6;--lg:#E8E8EC;--gr:#2E8B57;--rd:#C0392B;--mg:#888}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;background:var(--of);color:var(--nv);line-height:1.5}
 .hdr{background:linear-gradient(135deg,var(--dk),var(--nv));color:var(--wh);padding:1.2rem 2rem;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100}
 .hdr-l{display:flex;align-items:center;gap:1.5rem}
 .logo{font-size:1.6rem;font-weight:700;color:var(--gd);letter-spacing:1px}
